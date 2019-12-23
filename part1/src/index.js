@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import ReactDOM from "react-dom";
 
 
@@ -9,6 +9,8 @@ const Header = (props) => {
 }
 
 const Content = (props) => {
+
+    
     return (
         <>
         <p>{props.parts[0].name} {props.parts[0].exercises}</p>
@@ -28,50 +30,43 @@ const Total = (props) => {
 
 const Growth = (props) => {
     return (
-        <p>{props.name[3].name}</p>
+        <p>{props.parts.name}</p>
     )
 }
-const arto = {
-    name: 'Shehryar Bajwa',
-    age: 30,
-    education: 'high school dropout',
-    greet: function(){
-        console.log('hello, my name is ' + this.name)
-    },
-    doAddition: function(a,b){
-        console.log(a + b)
-    },
-    doMath: function(a){
-        console.log(a* this.age)
-        return a * this.age
-    }
-}
 
-arto.doAddition(1,4)
-const referenceToAddition = arto.doAddition
-referenceToAddition(10,15)
-
-arto.greet()
-arto.name = 'Taymur'
 //Here this now refers to the referenceToGreet which is a global variable
 //When we bind it to arto, we use arto's internal declared value
 
+const Hello = (props) => {
 
-const referenceToGreet = arto.greet.bind(arto)
-referenceToGreet()
+    const {name, age} = props.parts[4]
 
-arto.growOlder = function(){
-    this.age += 1
+    const bornYear = () => new Date().getFullYear() - age
+
+
+    return (
+        <div>
+            <li>
+                Hello {name}, you are {age} years old.
+            </li>
+            <p>
+                So you were probably born in {bornYear()}
+            </p>
+        </div>
+    )
 }
 
-const math = arto.doMath.bind(arto)
-math(10)
-
-console.log(arto.age)
-arto.growOlder()
-console.log(arto.age)
+const Counter = (props) => {
+    const {counter} = props
+    return (
+        <div>{counter}</div>
+    )
+}
 
 const App = () => {
+
+    let counter = 1;
+
     const course = {
         name: 'Half Stack Web Application',
         parts : [
@@ -90,9 +85,22 @@ const App = () => {
             {
                 name:'Learning React JSX Syntax',
                 exercises: 8
+            },
+            {
+                name:'Shehryar',
+                age: 26
             }
         ]
     }
+
+    const refresh = () => {
+        ReactDOM.render(<App />, document.getElementById('root'));
+    }
+
+    setInterval(() => {
+        refresh()
+        counter += 1
+    }, 5000)
 
 
   return (
@@ -100,7 +108,9 @@ const App = () => {
         <Header course={course.name} />
         <Content parts={course.parts} />
         <Total parts={course.parts} />
-        <Growth name={course.parts} />
+        <Growth parts={course.parts[3]} />
+        <Hello parts={course.parts} />
+        <Counter counter={counter} />
     </div>
   )
 };
