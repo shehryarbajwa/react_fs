@@ -1,41 +1,74 @@
-import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
 
 
-const App = (props) => {
-    const [ click, setClick ] = useState({
-        left: 0, right: 0
-    })
-
-    const handleLeftClick = () => {
-        const newClicks = {
-            left: click.left + 1,
-            right: click.right
-        }
-        setClick(newClicks)
+const History = (props) => {
+    if (props.allClicks.length === 0) {
+        return (
+            <div>
+                the app is used by pressing the buttons
+            </div>
+        )
     }
-    const handleRightClick = () => {
-        const newClicks = {
-            left: click.left,
-            right: click.right + 1
-        }
-        setClick(newClicks)
-    }
-    
+
+    return (
+        <div>
+            button press history: {props.allClicks.join(' ')}
+        </div>
+    )
+}
+
+const Statistics = ({name, good, bad, neutral}) => {
+    return (
+        <div>
+            <h3>{name}</h3>
+            <p>Good {good}</p>
+            <p>Neutral {neutral}</p>
+            <p>Bad {bad}</p>
+
+        </div>
+    )
+}
+
+const Button = (props) => (
+    <button onClick={props.onClick}>
+      {props.text}
+    </button>
+  )
+
+const App = props => {
+
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral]  = useState(0)
+  const [bad, setBad] = useState(0)
+
+
+
+  const handleGoodClick = () => {
+    setGood(good + 1)
+  }
+
+  const handleBadClick = () => {
+    setBad(bad + 1)
+  }
+
+  const handleNeutralClick = () => {
+      setNeutral(neutral + 1)
+  }
+
+  const name = 'Statistics'
 
   return (
     <div>
       <div>
-          {click.left}
-          <button onClick={handleLeftClick}>Left</button>
-          <button onClick={handleRightClick}>Right</button>
-          {click.right}
+          <h3>Give Feedback</h3>
+        <Button onClick={handleGoodClick} text='good' />
+        <Button onClick={handleNeutralClick} text='neutral' />
+        <Button onClick={handleBadClick} text='bad' />
+        <Statistics name={name} good={good} bad={bad} neutral={neutral} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-ReactDOM.render(
-  <App />, 
-  document.getElementById('root')
-)
+ReactDOM.render(<App />, document.getElementById("root"));
