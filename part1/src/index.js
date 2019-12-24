@@ -19,13 +19,22 @@ const History = (props) => {
 }
 
 const Statistics = ({name, good, bad, neutral}) => {
+    if (good > 0 && bad > 0 && neutral > 0) {
+        return (
+            <div>
+                <p>Good {good}</p>
+                <p>Neutral {neutral}</p>
+                <p>Bad {bad}</p>
+                <p>Average {(good + neutral + bad) / 3}</p>
+                <p>Positive {(good) / (good + neutral + bad) * 100} %</p>
+    
+            </div>
+        )
+    }
     return (
         <div>
             <h3>{name}</h3>
-            <p>Good {good}</p>
-            <p>Neutral {neutral}</p>
-            <p>Bad {bad}</p>
-
+            <p>No feedback given</p>
         </div>
     )
 }
