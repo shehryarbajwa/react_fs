@@ -64,6 +64,7 @@ const App = (props) => {
   return (
     <div>
       <h1>Half Stack application Development</h1>
+      <h2>Testing hypothesis</h2>
       <ul>{course_rows()}</ul>
       <p>Total: {res()}</p>
       <h1>Notes</h1>
