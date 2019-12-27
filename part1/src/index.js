@@ -2,21 +2,6 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
 
-const History = (props) => {
-    if (props.allClicks.length === 0) {
-        return (
-            <div>
-                the app is used by pressing the buttons
-            </div>
-        )
-    }
-
-    return (
-        <div>
-            button press history: {props.allClicks.join(' ')}
-        </div>
-    )
-}
 
 const Statistics = ({name, good, bad, neutral}) => {
     if (good > 0 && bad > 0 && neutral > 0) {
@@ -26,7 +11,7 @@ const Statistics = ({name, good, bad, neutral}) => {
                 <p>Neutral {neutral}</p>
                 <p>Bad {bad}</p>
                 <p>Average {(good + neutral + bad) / 3}</p>
-                <p>Positive {(good) / (good + neutral + bad) * 100} %</p>
+                <p>Positive Feedback %: {(good) / (good + neutral + bad) * 100} %</p>
     
             </div>
         )
