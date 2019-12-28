@@ -2,13 +2,14 @@ import React, {useState} from "react";
 import ReactDOM from "react-dom";
 import Note from "./Components/Note";
 import Course from "./Components/Course";
+import PhoneBook from "./Components/PhoneBook"
 
 const notes = [
   {
     id: 1,
     content: "HTML is easy",
     date: "2019-05-30T17:30:31.098Z",
-    important: true
+    important: false
   },
   {
     id: 2,
@@ -51,7 +52,6 @@ const App = (props) => {
 
     const {courses} = props;
   //Here the child component gets the key declared so there is no need to declared it again within the Component
-  const rows = () => notes.map(note => <Note key={note.id} note={note} />);
 
 
   const addNote = (event) => {
@@ -73,6 +73,13 @@ const App = (props) => {
     setNewNote(event.target.value)
   }
 
+  const notesToShow = showAll ? notes : notes.filter(note => note.important)
+
+  const rows = () => notesToShow.map(note => <Note key={note.id} note={note} />);
+
+  const handleImportantButton = () => {
+    setShowAll(!showAll)
+  }
 
 
   const course_rows = () =>
@@ -95,6 +102,9 @@ const App = (props) => {
       <ul>{course_rows()}</ul>
       <p>Total: {res()}</p>
       <h1>Notes</h1>
+      <button onClick={handleImportantButton}>
+      Show {showAll ? 'important' : 'all' }
+      </button>
       <ul>{rows()}</ul>
       <form onSubmit={addNote}>
         <input value={newNote} onChange={handleNoteChange}/>
@@ -105,6 +115,6 @@ const App = (props) => {
 };
 
 ReactDOM.render(
-  <App notes={notes} courses={courses} />,
+  <PhoneBook />,
   document.getElementById("root")
 );
