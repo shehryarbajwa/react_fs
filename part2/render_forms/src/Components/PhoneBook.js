@@ -12,35 +12,42 @@ const Phonebook = () => {
       [
       { 
           name: "Arto Hellas",
-          id: 1
+          id: 1,
+          number: '6044464790'
         }
     ]
     );
+  
   const [newName, setNewName] = useState("enter a name");
-
+  const [newNumber, setNewNumber] = useState('XXX-XXX-XXXX')
+  const [nameExists, setNameExists] = useState(false)
+  
   const handleSubmit = event => {
     event.preventDefault();
-
     const newPhone = {
       name: newName,
-      id: persons.length + 1
+      id: persons.length + 1,
+      number: newNumber
     };
-    
 
-    setPersons(persons.concat(newPhone));
-    console.log(persons)
+    const handleAlert = () => {
+        alert(`${newName} is already added to phonebook`);
+   };
+
+    const condition = persons.map((person) => person.name === newPhone.name ? handleAlert() : setPersons(persons.concat(newPhone)))
+    
     setNewName("");
   };
 
   const handleInput = event => {
     setNewName(event.target.value);
   };
-
-  //const person_rows = () => persons.keys(name).map(person => person.name)
   const person_rows = () => persons.map(person => 
-    <Phone key={person.id} name={person.name} />)
+    <Phone key={person.id} name={person.name} number={person.number} />)
 
-  
+  const handleNumberInput = (event) => {
+      setNewNumber(event.target.value)
+  }
   
 
   return (
@@ -49,6 +56,9 @@ const Phonebook = () => {
       <form>
         <div>
           Name: <input value={newName} onChange={handleInput} />
+        </div>
+        <div>
+            Number: <input value={newNumber} onChange={handleNumberInput} />
         </div>
         <div>
           <button onClick={handleSubmit}>Add Name</button>
