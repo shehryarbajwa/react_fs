@@ -1,27 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Phone from "./Phone";
-
-const persons = [
-  {
-    name: "Arto Hellas"
-  }
-];
+import phoneService from "../services/phone.js";
 
 const Phonebook = () => {
-  const [persons, setPersons] = useState(
-      [
-      { 
-          name: "Arto Hellas",
-          id: 1,
-          number: '6044464790'
-        }
-    ]
-    );
-  
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("enter a name");
-  const [newNumber, setNewNumber] = useState('XXX-XXX-XXXX')
-  const [nameExists, setNameExists] = useState(false)
-  
+  const [newNumber, setNewNumber] = useState("XXX-XXX-XXXX");
+  const [nameExists, setNameExists] = useState(false);
+
+  useEffect(() => {
+    phoneService.getAll().then(person => {
+      setPersons(person);
+    });
+  }, []);
+
+  console.log(persons)
+
   const handleSubmit = event => {
     event.preventDefault();
     const newPhone = {
@@ -30,12 +24,20 @@ const Phonebook = () => {
       number: newNumber
     };
 
-    const handleAlert = () => {
-        alert(`${newName} is already added to phonebook`);
-   };
+    phoneService.create(newPhone).then(person => {
+      setPersons(person);
+    });
 
-    const condition = persons.map((person) => person.name === newPhone.name ? handleAlert() : setPersons(persons.concat(newPhone)))
-    
+    const handleAlert = () => {
+      alert(`${newName} is already added to phonebook`);
+    };
+
+    const personExists = persons.map(person =>
+      person.name === newPhone.name
+        ? handleAlert()
+        : setPersons(persons.concat(newPhone))
+    );
+
     setNewName("");
   };
 
@@ -43,11 +45,13 @@ const Phonebook = () => {
     setNewName(event.target.value);
   };
   const person_rows = () => persons.map(person => 
-    <Phone key={person.id} name={person.name} number={person.number} />)
+      <Phone key={person.id} name={person.name} number={person.number} />
+    );
 
-  const handleNumberInput = (event) => {
-      setNewNumber(event.target.value)
-  }
+  const handleNumberInput = event => {
+    setNewNumber(event.target.value);
+  };
+
   
 
   return (
@@ -58,16 +62,14 @@ const Phonebook = () => {
           Name: <input value={newName} onChange={handleInput} />
         </div>
         <div>
-            Number: <input value={newNumber} onChange={handleNumberInput} />
+          Number: <input value={newNumber} onChange={handleNumberInput} />
         </div>
         <div>
           <button onClick={handleSubmit}>Add Name</button>
         </div>
       </form>
-      <h2>Numbers</h2>
-      <div>
-        {person_rows()}
-      </div>
+      <h2>People</h2>
+      <div>{person_rows()}</div>
     </div>
   );
 };
