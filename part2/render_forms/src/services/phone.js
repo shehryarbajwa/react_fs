@@ -11,9 +11,14 @@ const create = (phoneObject) => {
     return request.then(response => response.data)
 }
 
+const noteDelete = (id, phoneObject) => {
+    const request = axios.delete(`${baseUrl}/${id}`, phoneObject)
+    return request.then(response => response.data)
+}
+
 const update = (id, phoneObject) => {
     const request = axios.put(`${baseUrl}/${id}`, phoneObject)
     return request.then(response => response.data)
 }
 
-export default { getAll, create, update }
+export default { getAll, create, update, noteDelete }

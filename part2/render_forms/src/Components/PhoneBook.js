@@ -14,8 +14,6 @@ const Phonebook = () => {
     });
   }, []);
 
-  console.log(persons)
-
   const handleSubmit = event => {
     event.preventDefault();
     const newPhone = {
@@ -23,10 +21,6 @@ const Phonebook = () => {
       id: persons.length + 1,
       number: newNumber
     };
-
-    phoneService.create(newPhone).then(person => {
-      setPersons(person);
-    });
 
     const handleAlert = () => {
       alert(`${newName} is already added to phonebook`);
@@ -38,21 +32,51 @@ const Phonebook = () => {
         : setPersons(persons.concat(newPhone))
     );
 
+    phoneService.create(newPhone).then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson));
+    });
+
     setNewName("");
+    setNewNumber("");
   };
+
+  const handleDelete = id => {
+    if (window.confirm("Are you sure you want to delete this person?")) {
+      const url = `http://localhost:3001/persons/${id}`;
+      const contact = persons.find(person => person.id === id);
+      const contactToDelete = { ...contact };
+
+      phoneService
+        .noteDelete(id, contactToDelete)
+        .then(returnedPerson => {
+          setPersons(persons.filter(person => person.id !== contactToDelete.id));
+          alert(`${contactToDelete.name} has been deleted from the phonebook`)
+      })
+        .catch(error => {
+          alert(`This contact with ${id} was already deleted`);
+        })
+      }
+  }
+
+  const person_rows = () =>
+    persons.map(person => {
+      return (
+        <Phone
+          key={person.id}
+          name={person.name}
+          number={person.number}
+          handleDelete={() => handleDelete(person.id)}
+        />
+      );
+    });
 
   const handleInput = event => {
     setNewName(event.target.value);
   };
-  const person_rows = () => persons.map(person => 
-      <Phone key={person.id} name={person.name} number={person.number} />
-    );
 
   const handleNumberInput = event => {
     setNewNumber(event.target.value);
   };
-
-  
 
   return (
     <div>

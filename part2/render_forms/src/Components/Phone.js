@@ -1,8 +1,9 @@
 import React from 'react';
 
-const Phone = ({ name, number }) => {
+const label = 'Delete contact'
+const Phone = ({ name, number, handleDelete }) => {
     return (
-        <li>{name} no: {number}</li>
+        <li>{name} no: {number} <button onClick={handleDelete}>{label}</button></li>
     )
 }
 
