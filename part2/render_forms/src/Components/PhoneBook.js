@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Phone from "./Phone";
 import phoneService from "../services/phone.js";
+import Notification from '../Components/Error'
 
 const Phonebook = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("enter a name");
   const [newNumber, setNewNumber] = useState("XXX-XXX-XXXX");
   const [nameExists, setNameExists] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("some error happened...");
 
   useEffect(() => {
     phoneService.getAll().then(person => {
@@ -49,14 +51,21 @@ const Phonebook = () => {
       phoneService
         .noteDelete(id, contactToDelete)
         .then(returnedPerson => {
-          setPersons(persons.filter(person => person.id !== contactToDelete.id));
-          alert(`${contactToDelete.name} has been deleted from the phonebook`)
-      })
+          setPersons(
+            persons.filter(person => person.id !== contactToDelete.id)
+          );
+          setErrorMessage(
+            `Note ${contactToDelete.name} was already removed from the phoneBook`
+          );
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        })
         .catch(error => {
           alert(`This contact with ${id} was already deleted`);
-        })
-      }
-  }
+        });
+    }
+  };
 
   const person_rows = () =>
     persons.map(person => {
@@ -81,6 +90,7 @@ const Phonebook = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <form>
         <div>
           Name: <input value={newName} onChange={handleInput} />
